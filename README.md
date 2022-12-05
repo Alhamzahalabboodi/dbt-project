@@ -51,4 +51,5 @@
 
 **BI DASHBOARD**
 
+<img width="1467" alt="Screen Shot 2022-12-05 at 5 19 28 PM" src="https://user-images.githubusercontent.com/111074755/205765072-2a14c438-93e7-4c8d-a330-2931bd240c68.png">
 
