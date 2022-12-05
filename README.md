@@ -9,6 +9,7 @@
 
  In this project, I will go through a real-world Airbnb project where I will use several of the dbt functionalities. Snowflake will be used as the Data    Warehouse. 
 
+<img width="1194" alt="Screen Shot 2022-12-05 at 3 59 51 PM" src="https://user-images.githubusercontent.com/111074755/205756349-666f3c16-1ad1-44e6-91c2-0bd2ffbf9d08.png">
  
  The dbt functionalities used in this project: 
 
