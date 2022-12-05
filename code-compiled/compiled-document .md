@@ -1,7 +1,4 @@
-# Introduction and Environment Setup
-
 ## Snowflake user creation
-Copy these SQL statements into a Snowflake Worksheet, select all and execute them (i.e. pressing the play button).
 
 ```sql
 -- Use an admin role
@@ -17,7 +14,7 @@ GRANT OPERATE ON WAREHOUSE COMPUTE_WH TO ROLE TRANSFORM;
 
 -- Create the `dbt` user and assign to role
 CREATE USER IF NOT EXISTS dbt
-  PASSWORD='dbtPassword123'
+  PASSWORD=''
   LOGIN_NAME='dbt'
   MUST_CHANGE_PASSWORD=FALSE
   DEFAULT_WAREHOUSE='COMPUTE_WH'
@@ -101,66 +98,7 @@ COPY INTO raw_hosts (id, name, is_superhost, created_at, updated_at)
                     FILE_FORMAT = (type = 'CSV' skip_header = 1
                     FIELD_OPTIONALLY_ENCLOSED_BY = '"');
 
-```
-
-# Python and Virtualenv setup, and dbt installation - Windows
-
-## Python
-This is the Python installer you want to use: 
-
-https://www.python.org/ftp/python/3.10.7/python-3.10.7-amd64.exe 
-
-Please make sure that you work with Python 3.11 as newer versions of python might not be compatible with some of the dbt packages.
-
-## Virtualenv setup
-Here are the commands we executed in this lesson:
-```
-cd Desktop
-mkdir course
-cd course
-
-virtualenv venv
-venv\Scripts\activate
-```
-
-## dbt installation
-
-__Make sure that you are working in the _Desktop/course_ folder and that you have virtualenv activated before installing dbt.__
-
-Here are the commands we executed in this lesson:
-```
-pip install dbt-snowflake==1.2.0
-dbt
-```
-
-# Virtualenv setup and dbt installation - Mac
-
-## iTerm2
-We suggest you to use _iTerm2_ instead of the built-in Terminal application.
-
-https://iterm2.com/
-
-## Homebrew
-Homebrew is a widely popular application manager for the Mac. This is what we use in the class for installing a virtualenv.
-
-https://brew.sh/
-
-## dbt installation
-
-Here are the commands we execute in this lesson:
-
-```sh
-create course
-cd course
-virtualenv venv
-. venv/bin/activate
-rehash
-pip install dbt-snowflake
-which dbt
-```
-
 # Models
-## Code used in the lesson
 
 ### SRC Listings 
 `models/src/src_listings.sql`:
@@ -208,17 +146,7 @@ FROM
 ```
 
 
-## Exercise
-
-Create a model which builds on top of our `raw_hosts` table. 
-
-1) Call the model `models/src/src_hosts.sql`
-2) Use a CTE (common table expression) to define an alias called `raw_hosts`. This CTE select every column from the raw hosts table `AIRBNB.RAW.RAW_HOSTS`
-3) In your final `SELECT`, select every column and record from `raw_hosts` and rename the following columns:
-   * `id` to `host_id`
-   * `name` to `host_name` 
-
-### Solution
+## SRC Hosts
 
 ```sql
 WITH raw_hosts AS (
@@ -238,7 +166,6 @@ FROM
 ```
 
 # Models
-## Code used in the lesson
 
 ### DIM Listings 
 `models/dim/dim_listings_cleansed.sql`:
@@ -301,18 +228,7 @@ FROM
     src_hosts
 ```
 
-## Exercise
-
-Create a new model in the `models/dim/` folder called `dim_hosts_cleansed.sql`.
- * Use a CTE to reference the `src_hosts` model
- * SELECT every column and every record, and add a cleansing step to host_name:
-   * If host_name is not null, keep the original value 
-   * If host_name is null, replace it with the value ‘Anonymous’
-   * Use the NVL(column_name, default_null_value) function 
-Execute `dbt run` and verify that your model has been created 
-
-
-### Solution
+## DIM Hosts
 
 ```sql
 WITH src_hosts AS (
@@ -410,15 +326,8 @@ DROP VIEW AIRBNB.DEV.SRC_REVIEWS;
 # Sources and Seeds
 
 ## Full Moon Dates CSV
-Download the CSV from the lesson's _Resources_ section, or download it from the following S3 location:
-https://dbtlearn.s3.us-east-2.amazonaws.com/seed_full_moon_dates.csv
 
-Then place it to the `seeds` folder
-
-If you download from S3 on a Mac/Linux, can you import the csv straight to your seed folder by executing this command:
-```sh
-curl https://dbtlearn.s3.us-east-2.amazonaws.com/seed_full_moon_dates.csv -o seeds/seed_full_moon_dates.csv
-```
+Place it to the `seeds` folder
 
 ## Contents of models/sources.yml
 ```yaml
@@ -571,12 +480,11 @@ LIMIT 10
 dbt test --select dim_listings_cleansed
 ```
 
-## Exercise
+## Restricting test on review date
 
 Create a singular test in `tests/consistent_created_at.sql` that checks that there is no review date that is submitted before its listing was created: Make sure that every `review_date` in `fct_reviews` is more recent than the associated `created_at` in `dim_listings_cleansed`.
 
 
-### Solution
 ```sql
 SELECT * FROM {{ ref('dim_listings_cleansed') }} l
 INNER JOIN {{ ref('fct_reviews') }} r
@@ -746,7 +654,7 @@ Here is the schema of our input data:
 USE ROLE ACCOUNTADMIN;
 CREATE ROLE IF NOT EXISTS REPORTER;
 CREATE USER IF NOT EXISTS PRESET
- PASSWORD='presetPassword123'
+ PASSWORD=''
  LOGIN_NAME='preset'
  MUST_CHANGE_PASSWORD=FALSE
  DEFAULT_WAREHOUSE='COMPUTE_WH'
@@ -809,20 +717,12 @@ exposures:
 ```
 
 ## Post-hook
-Add this to your `dbt_project.yml`:
+Add this to  `dbt_project.yml`:
 
 ```
 +post-hook:
       - "GRANT SELECT ON {{ this }} TO ROLE REPORTER"
 ```
-
-# Debugging Tests and Testing with dbt-expectations
-
-* The original Great Expectations project on GitHub: https://github.com/great-expectations/great_expectations
-* dbt-expectations: https://github.com/calogica/dbt-expectations 
-
-For the final code in _packages.yml_, _models/schema.yml_ and _models/sources.yml_, please refer to the course's Github repo:
-https://github.com/nordquant/complete-dbt-bootcamp-zero-to-hero
 
 ## Testing a single model
 
@@ -841,7 +741,5 @@ dbt test --select source:airbnb.listings
 ```
 dbt --debug test --select dim_listings_w_hosts
 ```
-
-Keep in mind that in the lecture we didn't use the _--debug_ flag after all as taking a look at the compiled sql file is the better way of debugging tests.
 
 
