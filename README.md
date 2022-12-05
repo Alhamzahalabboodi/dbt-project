@@ -42,19 +42,7 @@
 
 **DATA FLOW OVERVIEW**
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+<img width="1184" alt="Screen Shot 2022-12-05 at 4 17 58 PM" src="https://user-images.githubusercontent.com/111074755/205756792-a4d7750b-e265-451a-ac5e-0ca86e73299d.png">
 
 
 **DATA FLOW STAGING LAYERS**
