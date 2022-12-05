@@ -38,15 +38,7 @@
  
 **DATA MODEL**
 
-
-
-
-
-
-
-
-
-
+<img width="984" alt="Screen Shot 2022-12-05 at 4 16 57 PM" src="https://user-images.githubusercontent.com/111074755/205756570-9c0a6932-d5f6-4653-b3f6-3c7426f60293.png">
 
 **DATA FLOW OVERVIEW**
 
