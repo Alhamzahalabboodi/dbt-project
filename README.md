@@ -47,11 +47,4 @@
 
 **DATA FLOW STAGING LAYERS**
 
-
-
-
-
-
-
-
- 
+<img width="1174" alt="Screen Shot 2022-12-05 at 4 19 06 PM" src="https://user-images.githubusercontent.com/111074755/205757127-ba1947dc-9889-4d71-a7f8-5720cca8acdb.png">
